@@ -2,7 +2,7 @@
 
 namespace CQSL { namespace Test { 
 
-    constexpr uint32_t uTest = 10;
+    constexpr unsigned int uTest = 10;
     static const wchar_t* pszTest = L"The value of the raw string";
     extern std::wstring strTest;
 
@@ -98,6 +98,10 @@ constexpr CQSL::Test::TestBmp operator&=(CQSL::Test::TestBmp& eLHS, const CQSL::
 {
     eLHS = static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(eLHS) & static_cast<int16_t>(eRHS));
     return eLHS;
+}
+constexpr CQSL::Test::TestBmp operator~(const CQSL::Test::TestBmp eTurnOff)
+{
+    return static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(CQSL::Test::TestBmp::AllBits) & ~static_cast<int16_t>(eTurnOff));
 }
 
 

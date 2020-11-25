@@ -128,22 +128,6 @@ void EnumValInfo::ParseFrom(        InputSrc&       srcFile
 }
 
 
-EnumInfo::EnumInfo(EnumInfo&& enumiSrc) noexcept
-{
-    std::swap(m_bIsMonotonic, enumiSrc.m_bIsMonotonic);
-    std::swap(m_bText1, enumiSrc.m_bText1);
-    std::swap(m_bText2, enumiSrc.m_bText2);
-    std::swap(m_bDoAltVal, enumiSrc.m_bDoAltVal);
-    std::swap(m_bDoInc, enumiSrc.m_bDoInc);
-    std::swap(m_eType, enumiSrc.m_eType);
-
-    m_strName       = std::move(enumiSrc.m_strName);
-    m_strUnderType  = std::move(enumiSrc.m_strUnderType);
-    m_vSynonyms     = std::move(enumiSrc.m_vSynonyms);  
-    m_vValues       = std::move(enumiSrc.m_vValues);  
-}
-
-
 //
 //  At this point, the Enum= of the block start line has been eaten. So we
 //  get the enum name, then go into the block and parse out all the info and

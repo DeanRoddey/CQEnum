@@ -119,13 +119,24 @@ bool CQEnumCppOutput::bMustGenerate(const   std::string&    strTarDir
     CreatePaths(strTarDir, strBaseName, pathHdr, pathImpl);
 
     // If either doesn't exist or is older than the source
-    return
+    const file_time_type tmHdr = std::filesystem::last_write_time(pathHdr);
+    const file_time_type tmImpl = std::filesystem::last_write_time(pathImpl);
+
+    const bool bRet
     (
         !std::filesystem::exists(pathHdr)
-        || (std::filesystem::last_write_time(pathHdr) < tmSource)
+        || (tmHdr < tmSource)
         || !std::filesystem::exists(pathImpl)
-        || (std::filesystem::last_write_time(pathImpl) < tmSource)
+        || (tmImpl < tmSource)
     );
+
+    if (bRet)
+    {
+        std::cout << "  Updating GCEnum output files..." << std::endl;
+        
+    }
+
+    return bRet;
 }
 
 
@@ -543,6 +554,15 @@ void CQEnumCppOutput::GenGlobals(const CQEnumInfo& cqeiSrc)
                         << ">(static_cast<" << enumiCur.m_strUnderType
                         << ">(eLHS) & static_cast<" << enumiCur.m_strUnderType
                         << ">(eRHS));\n    return eLHS;\n}\n";
+
+            m_strmHdr   << "constexpr " << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
+                        << " operator~(const " << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
+                        << " eTurnOff)\n{\n    return static_cast<"
+                        << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
+                        << ">(static_cast<" << enumiCur.m_strUnderType
+                        << ">(" << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
+                        << "::AllBits) & ~static_cast<" << enumiCur.m_strUnderType
+                        << ">(eTurnOff));\n}\n";
         }
 
         m_strmHdr << "\n\n";

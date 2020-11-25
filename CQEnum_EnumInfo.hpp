@@ -68,8 +68,8 @@ class EnumInfo
         using KVSPair = std::pair<std::string, int32_t>;
 
         EnumInfo() noexcept = default;
-        EnumInfo(EnumInfo&& enumiSrc) noexcept;
         ~EnumInfo() noexcept = default;
+        EnumInfo(EnumInfo&& enumiSrc) = default;
 
         // Unimplemented
         EnumInfo(const EnumInfo&) = delete;

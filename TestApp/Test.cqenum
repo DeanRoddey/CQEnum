@@ -6,14 +6,14 @@
 
 ; This is a comment
 File=
-    ; This is also a comment
+    ; Required version, and indicate the namespaces to generate into
     Version=1
     Namespaces=CQSL Test
 EndFile
 
 Constants=
 
-    ConstExpr=uTest, uint32_t, 10
+    ConstExpr=uTest, unsigned int, 10
     Const=pszTest, wchar_t*, L"The value of the raw string"
     ExtConst=strTest, std::wstring, L"The value of the string object"
 
