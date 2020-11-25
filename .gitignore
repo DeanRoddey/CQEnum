@@ -1,0 +1,8 @@
+# Ignore the Debug/Release directories
+**/Debug
+**/Release
+
+# Ignore any IDE goop
+**/.vscode
+**/.vs
+

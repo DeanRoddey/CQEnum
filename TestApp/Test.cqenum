@@ -1,0 +1,79 @@
+;
+; This is a test definition file that will cause the files
+; Test.hpp and Test.cpp to be generated. The test app includes
+; these files and tests the generated functionality.
+;
+
+; This is a comment
+File=
+    ; This is also a comment
+    Version=1
+    Namespaces=CQSL Test
+EndFile
+
+Constants=
+
+    ConstExpr=uTest, uint32_t, 10
+    Const=pszTest, wchar_t*, L"The value of the raw string"
+    ExtConst=strTest, std::wstring, L"The value of the string object"
+
+EndConstants
+
+Enums=
+
+    Enum=TestEnum
+        Type=Standard
+        UnderType=int32_t
+        Flags=Text1 Text2 Inc
+
+        Val=Value1
+            Text1="The text for value 1"
+            Text2="The text2 for value 1"
+        EndVal
+
+        Val=Value2
+            Text1="The text for value 2"
+            Text2="The text2 for value 2"
+        EndVal
+
+        Val=Value3
+            Text1="The text for value 3"
+            Text2="The text2 for value 3"
+        EndVal
+
+        Synonym=Syn1:Value3
+
+    EndEnum
+
+
+    Enum=TestBmp
+        Type=Bitmap
+        UnderType=int16_t
+        Flags=Text1 Text2 AltVal
+
+        Val=Value1
+            Text1="The text for value 1"
+            Text2="The text2 for value 1"
+            Ordinal=0x0001
+            AltVal=101
+        EndVal
+
+        Val=Value2
+            Text1="The text for value 2"
+            Text2="The text2 for value 2"
+            Ordinal=0x0002
+            AltVal=102
+        EndVal
+
+        Val=Value3
+            Text1="The text for value 3"
+            Text2="The text2 for value 3"
+            Ordinal=0x0004
+            AltVal=0x67
+        EndVal
+
+        Synonym=Syn1:Value3
+
+    EndEnum
+
+EndEnums
