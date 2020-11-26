@@ -67,6 +67,7 @@ Here is a simple example, which will be broken down below:
         Enum=TestEnum
             Type=Standard
             Flags=Text1 Text2 Inc
+            StreamText=2
 
             Val=Value1
                 Text1="The text for value 1"
@@ -157,6 +158,7 @@ The available flags are:
 * Text2 = Each value must provide a Text2 value for text/value translation
 * Inc = Pre/post incremental operators should be generated (only valid for contiguous enums.)
 * AltVal = Each value must provide an alternate numeric value
+* StreamText=[1|2] Indicates that either text1 or text2 should be used when an enum value is sent to an output stream.
 
 **Values**
 
