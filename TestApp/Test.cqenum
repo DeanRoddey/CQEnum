@@ -6,15 +6,15 @@
 
 ; This is a comment
 File=
-    ; This is also a comment
+    ; Required version, and indicate the namespaces to generate into
     Version=1
     Namespaces=CQSL Test
 EndFile
 
 Constants=
 
-    ConstExpr=uTest, uint32_t, 10
-    Const=pszTest, wchar_t*, L"The value of the raw string"
+    ConstExpr=uTest, unsigned int, 10
+    Const=pszTest, wchar_t* const, L"The value of the raw string"
     ExtConst=strTest, std::wstring, L"The value of the string object"
 
 EndConstants
@@ -23,7 +23,6 @@ Enums=
 
     Enum=TestEnum
         Type=Standard
-        UnderType=int32_t
         Flags=Text1 Text2 Inc
 
         Val=Value1
@@ -48,7 +47,7 @@ Enums=
 
     Enum=TestBmp
         Type=Bitmap
-        UnderType=int16_t
+        UnderType=unsigned short
         Flags=Text1 Text2 AltVal
 
         Val=Value1
@@ -73,6 +72,7 @@ Enums=
         EndVal
 
         Synonym=Syn1:Value3
+        Synonym=Syn2:Value1,Value3
 
     EndEnum
 

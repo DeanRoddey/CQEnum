@@ -71,12 +71,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <CustomBuildBeforeTargets>PreBuildEvent</CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <CustomBuildBeforeTargets>PreBuildEvent</CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,11 +95,22 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>$(OutDir)CQEnum.exe $(ProjectDir)Test.cqenum $(ProjectDir)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Generate enum output</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>$(OutDir)CQEnum.exe $(ProjectDir)Test.cqenum $(ProjectDir)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>CQEnum check</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>Test.hpp Test.cpp</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -127,11 +140,22 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>$(OutDir)CQEnum.exe $(ProjectDir)Test.cqenum $(ProjectDir)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Generate enum output</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>$(OutDir)CQEnum.exe $(ProjectDir)Test.cqenum $(ProjectDir)</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>CQEnum check</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>Test.hpp Test.cpp</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -157,7 +181,9 @@
     <ClInclude Include="Test.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Test.cqenum" />
+    <None Include="Test.cqenum">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

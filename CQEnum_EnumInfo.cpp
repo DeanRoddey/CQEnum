@@ -4,21 +4,6 @@
 
 namespace CQSL { namespace CQEnum {
 
-EnumValInfo::EnumValInfo(EnumValInfo&& evaliSrc) noexcept
-{
-    m_iAltValue = 0;
-    m_iOrdinal = 0;
-    m_strName.clear();
-    m_strText1.clear();
-    m_strText2.clear();
-
-    std::swap(m_iAltValue, evaliSrc.m_iAltValue);
-    std::swap(m_iOrdinal, evaliSrc.m_iOrdinal);
-    m_strName = std::move(evaliSrc.m_strName);
-    m_strText1 = std::move(evaliSrc.m_strText1);
-    m_strText2 = std::move(evaliSrc.m_strText2);
-}
-
 
 //
 //  At this point the Val= part has been eaten. So we should see the value
@@ -125,22 +110,6 @@ void EnumValInfo::ParseFrom(        InputSrc&       srcFile
         strErrMsg.append(strEnumName);
         throw std::runtime_error(strErrMsg);
     }
-}
-
-
-EnumInfo::EnumInfo(EnumInfo&& enumiSrc) noexcept
-{
-    std::swap(m_bIsMonotonic, enumiSrc.m_bIsMonotonic);
-    std::swap(m_bText1, enumiSrc.m_bText1);
-    std::swap(m_bText2, enumiSrc.m_bText2);
-    std::swap(m_bDoAltVal, enumiSrc.m_bDoAltVal);
-    std::swap(m_bDoInc, enumiSrc.m_bDoInc);
-    std::swap(m_eType, enumiSrc.m_eType);
-
-    m_strName       = std::move(enumiSrc.m_strName);
-    m_strUnderType  = std::move(enumiSrc.m_strUnderType);
-    m_vSynonyms     = std::move(enumiSrc.m_vSynonyms);  
-    m_vValues       = std::move(enumiSrc.m_vValues);  
 }
 
 
@@ -263,7 +232,7 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
                     {
                         std::string strErrMsg("'");
                         strErrMsg.append(strFlag);
-                        strErrMsg.append("' is not a valid enumeration flag value (AltVal, Inc, Text1, Text2, Translate");
+                        strErrMsg.append("' is not a valid enumeration flag value (AltVal, Inc, Text1, Text2");
                         srcFile.ThrowParseErr(strErrMsg);
                     }
                 }
@@ -273,10 +242,8 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
         {
             srcFile.CheckEqualSign();
 
-            // We should get a 'name:enumval" pair
+            // We should get a 'name:enumval" pair, start with the name
             srcFile.GetIdToken("Expected synonym name after equal sign", strCurToken);
-            srcFile.CheckColon();
-            srcFile.GetIdToken("Expected synonym mapping value", strCurValue);
 
             // It can't have the same name as any existing synonym or value
             if ((itFindValue(strCurToken) != m_vValues.end())
@@ -290,19 +257,51 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
                 srcFile.ThrowParseErr(strErrMsg);                
             }
 
-            // The mapped value must already defined
-            std::vector<EnumValInfo>::iterator itVal = itFindValue(strCurValue);
-            if (itVal == m_vValues.end())
-            {
-                std::string strErrMsg("Synonym '");
-                strErrMsg.append(strCurToken);
-                strErrMsg.append("' does not refer to an existing value of enum '");
-                strErrMsg.append(m_strName);
-                strErrMsg.append("'");
-                srcFile.ThrowParseErr(strErrMsg);
-            }
+            srcFile.CheckColon();
 
-            m_vSynonyms.push_back(std::move(KVSPair(strCurToken, itVal->m_iOrdinal)));
+            //
+            //  We have either one or multiple comma separated values. Bitmapped enums
+            //  can indicate multiple values and the synonym is an OR of those values.
+            //
+            if (m_eType == EEnumTypes::Bitmap)
+            {
+                std::vector<std::string> vSynValues;
+                unsigned int uBits = 0;
+                srcFile.GetCommaSepValues(vSynValues);
+                for (std::string& strCur : vSynValues)
+                {
+                    std::vector<EnumValInfo>::iterator itVal = itFindValue(strCur);
+                    if (itVal == m_vValues.end())
+                    {
+                        std::string strErrMsg("'");
+                        strErrMsg.append(strCur);
+                        strErrMsg.append("' does not refer to an existing value of enum '");
+                        strErrMsg.append(m_strName);
+                        strErrMsg.append("'");
+                        srcFile.ThrowParseErr(strErrMsg);
+                    }
+
+                    uBits |= static_cast<unsigned int>(itVal->m_iOrdinal);
+                }
+
+                m_vSynonyms.emplace_back(strCurToken, uBits);
+            }
+            else
+            {
+                srcFile.GetIdToken("Expected synonym mapping value", strCurValue);
+
+                std::vector<EnumValInfo>::iterator itVal = itFindValue(strCurValue);
+                if (itVal == m_vValues.end())
+                {
+                    std::string strErrMsg("'");
+                    strErrMsg.append(strCurValue);
+                    strErrMsg.append("' does not refer to an existing value of enum '");
+                    strErrMsg.append(m_strName);
+                    strErrMsg.append("'");
+                    srcFile.ThrowParseErr(strErrMsg);
+                }
+                m_vSynonyms.emplace_back(strCurToken, itVal->m_iOrdinal);
+            }
         }
         else if (strCurToken == "Val")
         {

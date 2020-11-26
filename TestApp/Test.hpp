@@ -2,12 +2,12 @@
 
 namespace CQSL { namespace Test { 
 
-    constexpr uint32_t uTest = 10;
-    static const wchar_t* pszTest = L"The value of the raw string";
-    extern std::wstring strTest;
+    constexpr unsigned int uTest = 10;
+    static const wchar_t* const pszTest = L"The value of the raw string";
+    extern const std::wstring strTest;
 
 
-    enum class TestEnum : int32_t
+    enum class TestEnum : int
     {
           Value1 = 0
         , Value2 = 1
@@ -31,13 +31,15 @@ namespace CQSL { namespace Test {
     }
 
 
-    enum class TestBmp : int16_t
+    enum class TestBmp : unsigned short
     {
           Value1 = 1
         , Value2 = 2
         , Value3 = 4
         , AllBits = 0x7
+        , NoBits = 0x0
         , Syn1 = 4
+        , Syn2 = 5
     };
     const wchar_t* pszEnumToAltText1(const CQSL::Test::TestBmp eVal);
     const wchar_t* pszEnumToAltText2(const CQSL::Test::TestBmp eVal);
@@ -52,11 +54,11 @@ namespace CQSL { namespace Test {
     bool bIsValidEnumVal(const CQSL::Test::TestBmp eTest);
     inline bool bAllEnumBitsOn(const CQSL::Test::TestBmp eTest, const CQSL::Test::TestBmp eBits)
     {
-        return (static_cast<int16_t>(eTest) & static_cast<int16_t>(eBits)) == static_cast<int16_t>(eBits);
+        return (static_cast<unsigned short>(eTest) & static_cast<unsigned short>(eBits)) == static_cast<unsigned short>(eBits);
     }
     inline bool bAnyEnumBitsOn(const CQSL::Test::TestBmp eTest, const CQSL::Test::TestBmp eBits)
     {
-        return (static_cast<int16_t>(eTest) & static_cast<int16_t>(eBits)) != 0;
+        return (static_cast<unsigned short>(eTest) & static_cast<unsigned short>(eBits)) != 0;
     }
 
 }};
@@ -66,7 +68,7 @@ inline CQSL::Test::TestEnum& operator++(CQSL::Test::TestEnum& eVal)
 {
     if (eVal < CQSL::Test::TestEnum::Count)
     {
-        eVal = static_cast<CQSL::Test::TestEnum>(static_cast<int32_t>(eVal) + 1);
+        eVal = static_cast<CQSL::Test::TestEnum>(static_cast<int>(eVal) + 1);
     }
     return eVal;
 }
@@ -75,7 +77,7 @@ inline CQSL::Test::TestEnum operator++(CQSL::Test::TestEnum& eVal, int)
     const CQSL::Test::TestEnum eRet = eVal;
     if (eVal < CQSL::Test::TestEnum::Count)
     {
-        eVal = static_cast<CQSL::Test::TestEnum>(static_cast<int32_t>(eVal) + 1);
+        eVal = static_cast<CQSL::Test::TestEnum>(static_cast<int>(eVal) + 1);
     }
     return eRet;
 }
@@ -83,21 +85,25 @@ inline CQSL::Test::TestEnum operator++(CQSL::Test::TestEnum& eVal, int)
 
 constexpr CQSL::Test::TestBmp operator|(const CQSL::Test::TestBmp eLHS, const CQSL::Test::TestBmp eRHS)
 {
-    return static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(eLHS) | static_cast<int16_t>(eRHS));
+    return static_cast<CQSL::Test::TestBmp>(static_cast<unsigned short>(eLHS) | static_cast<unsigned short>(eRHS));
 }
 constexpr CQSL::Test::TestBmp operator&(const CQSL::Test::TestBmp eLHS, const CQSL::Test::TestBmp eRHS)
 {
-    return static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(eLHS) & static_cast<int16_t>(eRHS));
+    return static_cast<CQSL::Test::TestBmp>(static_cast<unsigned short>(eLHS) & static_cast<unsigned short>(eRHS));
 }
 constexpr CQSL::Test::TestBmp operator|=(CQSL::Test::TestBmp& eLHS, const CQSL::Test::TestBmp eRHS)
 {
-    eLHS = static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(eLHS) | static_cast<int16_t>(eRHS));
+    eLHS = static_cast<CQSL::Test::TestBmp>(static_cast<unsigned short>(eLHS) | static_cast<unsigned short>(eRHS));
     return eLHS;
 }
 constexpr CQSL::Test::TestBmp operator&=(CQSL::Test::TestBmp& eLHS, const CQSL::Test::TestBmp eRHS)
 {
-    eLHS = static_cast<CQSL::Test::TestBmp>(static_cast<int16_t>(eLHS) & static_cast<int16_t>(eRHS));
+    eLHS = static_cast<CQSL::Test::TestBmp>(static_cast<unsigned short>(eLHS) & static_cast<unsigned short>(eRHS));
     return eLHS;
+}
+constexpr CQSL::Test::TestBmp operator~(const CQSL::Test::TestBmp eTurnOff)
+{
+    return static_cast<CQSL::Test::TestBmp>((static_cast<unsigned short>(eTurnOff) ^ 0xFFFFFFFF) & static_cast<unsigned short>(CQSL::Test::TestBmp::AllBits));
 }
 
 

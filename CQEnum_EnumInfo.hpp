@@ -29,7 +29,7 @@ class EnumValInfo
 {
     public :
         EnumValInfo() = default;
-        EnumValInfo(EnumValInfo&& evaliSrc) noexcept;
+        EnumValInfo(EnumValInfo&& evaliSrc) = default;
         ~EnumValInfo() = default;
 
         // Unimplemented
@@ -68,8 +68,8 @@ class EnumInfo
         using KVSPair = std::pair<std::string, int32_t>;
 
         EnumInfo() noexcept = default;
-        EnumInfo(EnumInfo&& enumiSrc) noexcept;
         ~EnumInfo() noexcept = default;
+        EnumInfo(EnumInfo&& enumiSrc) = default;
 
         // Unimplemented
         EnumInfo(const EnumInfo&) = delete;
