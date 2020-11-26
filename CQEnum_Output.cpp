@@ -251,7 +251,7 @@ void CQEnumCppOutput::GenConstants(const CQEnumInfo& cqeiSrc)
                 break;
 
             case EConstTypes::ExtConst :
-                m_strmHdr << cqeiSrc.m_strExportMacro << "extern ";
+                m_strmHdr << cqeiSrc.m_strExportMacro << "extern const ";
                 break;
 
             default :
@@ -332,7 +332,7 @@ void CQEnumCppOutput::GenEnums(const CQEnumInfo& cqeiSrc)
         }
         else if (enumiCur.m_eType == EEnumTypes::Bitmap)
         {
-            // Build up a mask of all bits
+            // Build up a mask of all bits and generate the AllBits
             uint32_t uBits = 0;
             for (const EnumValInfo& evalCur : enumiCur.m_vValues)
             {
@@ -340,6 +340,9 @@ void CQEnumCppOutput::GenEnums(const CQEnumInfo& cqeiSrc)
             }
             m_strmHdr   << "        , AllBits = 0x"
                         << std::hex << uBits << std::dec << "\n";
+
+            // And do the NoBits value
+            m_strmHdr   << "        , NoBits = 0x0\n";
         }
 
         // Do any synonyms
@@ -559,10 +562,10 @@ void CQEnumCppOutput::GenGlobals(const CQEnumInfo& cqeiSrc)
                         << " operator~(const " << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
                         << " eTurnOff)\n{\n    return static_cast<"
                         << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
-                        << ">(static_cast<" << enumiCur.m_strUnderType
+                        << ">((static_cast<" << enumiCur.m_strUnderType
+                        << ">(eTurnOff) ^ 0xFFFFFFFF) & static_cast<" << enumiCur.m_strUnderType
                         << ">(" << cqeiSrc.m_strNSPrefix << enumiCur.m_strName
-                        << "::AllBits) & ~static_cast<" << enumiCur.m_strUnderType
-                        << ">(eTurnOff));\n}\n";
+                        << "::AllBits));\n}\n";
         }
 
         m_strmHdr << "\n\n";
@@ -579,7 +582,7 @@ void CQEnumCppOutput::GenImpl(const CQEnumInfo& cqeiSrc)
     {
         if (constiCur.m_eType == EConstTypes::ExtConst)
         {
-            m_strmImpl  << constiCur.m_strType << " " << constiCur.m_strName << " = "
+            m_strmImpl  << "const " << constiCur.m_strType << " " << constiCur.m_strName << " = "
                         << constiCur.m_strValue << ";\n";
         }
     }

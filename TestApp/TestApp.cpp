@@ -128,6 +128,18 @@ int main()
         std::wcout << L"Tilde operator failed" << std::endl;
     }
 
+    // And of a value against it's tilde'd value should create the NoBits value
+    if ((TestBmp::Value2 & ~TestBmp::Value2) != TestBmp::NoBits)
+    {
+        std::wcout << L"Tilde operator on self failed" << std::endl;
+    }
+
+    // Take Allbits and turn one off, leaving the rest
+    if ((TestBmp::AllBits & ~TestBmp::Value2) != (TestBmp::Value1 | TestBmp::Value3))
+    {
+    std::wcout << L"Tilde operator on AllBits failed" << std::endl;
+    }
+
     // Translate one of this guy's values to its text1 and text2 values
     if (std::wstring(pszEnumToAltText1(TestBmp::Value3)) != L"The text for value 3")
     {
@@ -147,6 +159,18 @@ int main()
     else if (eBmp != TestBmp::Value2)
     {
         std::wcout << L"Alt value translated to wrong enum" << std::endl;
+    }
+
+    // The first synonum should be equal to Value3
+    if (TestBmp::Syn1 != TestBmp::Value3)
+    {
+        std::wcout << L"Bitmapped enum Syn1 value is wrong" << std::endl;
+    }
+
+    // The second should be a combination of Value1 and Value3 bits
+    if (TestBmp::Syn2 != (TestBmp::Value1 | TestBmp::Value3))
+    {
+        std::wcout << L"Bitmapped enum Syn2 value is wrong" << std::endl;
     }
 
 

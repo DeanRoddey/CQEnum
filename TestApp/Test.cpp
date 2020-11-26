@@ -118,7 +118,7 @@ struct
 
 
 // External constants
-std::wstring strTest = L"The value of the string object";
+const std::wstring strTest = L"The value of the string object";
 
 
 // Enumeration method implementations

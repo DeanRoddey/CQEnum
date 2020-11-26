@@ -29,7 +29,7 @@ class EnumValInfo
 {
     public :
         EnumValInfo() = default;
-        EnumValInfo(EnumValInfo&& evaliSrc) noexcept;
+        EnumValInfo(EnumValInfo&& evaliSrc) = default;
         ~EnumValInfo() = default;
 
         // Unimplemented
