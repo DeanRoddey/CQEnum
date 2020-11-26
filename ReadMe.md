@@ -13,6 +13,7 @@ Amongst the things it will do for you:
 - You can define an alternate numerical value and translate between the enum value and numerical value
 - Defines a validity check to make it easy to validate that an enum has a legal value in it.
 - Methods to get the ordinal of a value or create a value from an ordinal.
+- Defines a << streaming operator to make it easy to format out one of the text values to output streams.
 - You can define synonym values that refer to other enum values, to allow you to define sub-ranges within the full range of values.
 - It also allows you to define various types of constants. This is more intended towards potential support for outputing other than just C++ content, i.e. to generate some cross platform content.
 - You provide a set of optional nested namespaces and it will generate the content in those namespaces, so the output will naturally show up in whatever namespace your project uses.

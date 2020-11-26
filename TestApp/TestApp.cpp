@@ -13,6 +13,7 @@
 //
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "Test.hpp"
 
 using namespace CQSL::Test;
@@ -89,6 +90,18 @@ int main()
     {
         std::wcout << L"Failed to convert name to enum value" << std::endl;
     }
+
+    // Test the stream output. We ask for Text1
+    {
+        std::wostringstream out;
+        out << TestEnum::Value2 << std::flush;
+
+        if (wcscmp(out.str().c_str(), L"The text2 for value 2") != 0)
+        {
+            std::wcout << L"Stream output failed" << std::endl;
+        }
+    }
+
 
     // A bitmapped enum. OR some of the values together
     TestBmp eBmp = TestBmp::Value1;

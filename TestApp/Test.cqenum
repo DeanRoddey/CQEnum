@@ -24,6 +24,7 @@ Enums=
     Enum=TestEnum
         Type=Standard
         Flags=Text1 Text2 Inc
+        StreamText=2
 
         Val=Value1
             Text1="The text for value 1"

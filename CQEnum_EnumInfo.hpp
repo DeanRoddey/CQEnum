@@ -67,6 +67,14 @@ class EnumInfo
         //
         using KVSPair = std::pair<std::string, int32_t>;
 
+        // Indicates which text value to use for things, if any
+        enum class ETextVals
+        {
+            None
+            , One
+            , Two
+        };
+
         EnumInfo() noexcept = default;
         ~EnumInfo() noexcept = default;
         EnumInfo(EnumInfo&& enumiSrc) = default;
@@ -119,6 +127,7 @@ class EnumInfo
         bool                        m_bText2 = false;
         bool                        m_bDoAltVal = false;
         bool                        m_bDoInc = false;
+        ETextVals                   m_eStreamText = ETextVals::None;
         EEnumTypes                  m_eType = EEnumTypes::Count;
         std::string                 m_strName;
         std::string                 m_strUnderType;

@@ -126,6 +126,7 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
     m_bText2 = false;
     m_bDoAltVal = false;
     m_bDoInc = false;
+    m_eStreamText = ETextVals::None;
     m_eType = EEnumTypes::Count;
     m_strName.clear();
     m_strUnderType = "int";
@@ -159,7 +160,8 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
         // Else has to be an attribute, synonym, or enum value
         if ((strCurToken == "Type")
         ||  (strCurToken == "UnderType")
-        ||  (strCurToken == "Flags"))
+        ||  (strCurToken == "Flags")
+        ||  (strCurToken == "StreamText"))
         {
             // These have to come before any values
             if (!m_vValues.empty())
@@ -235,6 +237,23 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
                         strErrMsg.append("' is not a valid enumeration flag value (AltVal, Inc, Text1, Text2");
                         srcFile.ThrowParseErr(strErrMsg);
                     }
+                }
+            }
+            else if (strCurToken == "StreamText")
+            {
+                // We get a 1 or 2 to indicate first or second text
+                const int iText = srcFile.iGetSignedToken("Expected 1 or 2 to indicate text to stream");
+                if (iText == 1)
+                {
+                    m_eStreamText = ETextVals::One;
+                }
+                else if (iText == 2)
+                {
+                    m_eStreamText = ETextVals::Two;
+                }
+                else
+                {
+                   srcFile.ThrowParseErr("Expected 1 or 2 to indicate which text value to stream");
                 }
             }
         }
@@ -382,6 +401,16 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
     {
         std::string strErrMsg("Increment support is only valid on non-bitmap, monotonic enums");
         srcFile.ThrowParseErr(strErrMsg);
+    }
+
+    // If text streaming was requested, make sure that text value is enabled
+    if ((m_eStreamText == ETextVals::One) && !m_bText1)
+    {
+        srcFile.ThrowParseErr("Stream of text 1 was requested but text 1 is not enabled");
+    }
+    else if ((m_eStreamText == ETextVals::Two) && !m_bText2)
+    {
+        srcFile.ThrowParseErr("Stream of text 2 was requested but text 2 is not enabled");
     }
 
     //
