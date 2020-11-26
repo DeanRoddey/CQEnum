@@ -19,7 +19,7 @@ using namespace CQSL;
 // Used for any general 'bad parameter' type errors
 static void ShowUsage(const char* const pszMsg)
 {
-    std::cout   << "\nSpidl srcfile targetdir [options]\n\n    "
+    std::cout   << "\nCQEnum srcfile targetdir [options]\n\n    "
                 << pszMsg
                 << std::endl;
 }
