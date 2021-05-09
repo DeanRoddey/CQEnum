@@ -8,13 +8,13 @@ namespace CQSL { namespace CQEnum {
 //  return false if not found. If it indicates there must be an equal sign, then we
 //  always throw if we find the token but not the equals.
 //
-bool InputSrc::bCheckNextId(const   char* const     pszCheck
-                            , const char* const     pszFailMsg
-                            , const bool            bWithEquals
-                            , const bool            bThrowIfIfNot)
+bool InputSrc::bCheckNextId(const   std::string_view&   svCheck
+                            , const char* const         pszFailMsg
+                            , const bool                bWithEquals
+                            , const bool                bThrowIfIfNot)
 {
     if ((eGetNextToken(m_strTmpToken) != CQEnum::ETokens::Identifier)
-    ||  (m_strTmpToken != pszCheck))
+    ||  (m_strTmpToken != svCheck))
     {
         if (bThrowIfIfNot)
         {
@@ -76,7 +76,7 @@ bool InputSrc::bNextChildOrEnd( const   char* const pszBlock
         strErrMsg.append("' child block or the end of the '");
         strErrMsg.append(pszEndBlock);
         strErrMsg.append("' parent block");
-        ThrowParseErr(strErrMsg.c_str());
+        ThrowParseErr(strErrMsg);
     }
     return bRes;
 }
@@ -88,7 +88,7 @@ void InputSrc::CheckBlockEnd(const char* const pszCheck)
 {
     m_strTmpTest = "End";
     m_strTmpTest.append(pszCheck);
-    bCheckNextId(m_strTmpTest.c_str(), "Expected end of current block", false, true);
+    bCheckNextId(m_strTmpTest, "Expected end of current block", false, true);
 }
 
 
@@ -140,7 +140,7 @@ int32_t InputSrc::iCheckSignedValue(const   char* const     pszCheck
 
     // Convert first to 64 bit so we can test limits
     size_t szEnd = 0;
-    int64_t iRet = std::stoll(m_strTmpToken.c_str(), &szEnd, 16);
+    int64_t iRet = std::stoll(m_strTmpToken, &szEnd, 16);
     if (szEnd != m_strTmpToken.length())
     {
         ThrowParseErr(pszFailMsg);
@@ -174,7 +174,7 @@ int32_t InputSrc::iGetSignedToken(const char* const pszFailMsg)
 
     // Convert first to 64 bit so we can test limits
     size_t szEnd = 0;
-    int64_t iRet = std::stoll(m_strTmpToken.c_str(), &szEnd, radix);
+    int64_t iRet = std::stoll(m_strTmpToken, &szEnd, radix);
     if (szEnd != m_strTmpToken.length())
     {
         ThrowParseErr(pszFailMsg);
@@ -361,7 +361,7 @@ std::string InputSrc::strGetToken(const char* const pszFailMsg)
     {
         ThrowParseErr(pszFailMsg);
     }
-    return move(strRet);
+    return strRet;
 }
 
 
@@ -546,14 +546,14 @@ bool InputSrc::bIsSpace(const char chTest) const noexcept
 
 
 // Builds up an error message that includes the last token position info
-std::string InputSrc::BuildErrMsg(const char* const pszErr) const
+std::string InputSrc::BuildErrMsg(const std::string_view& svMsg) const
 {
     std::string strFullMsg = "(Line=";
     strFullMsg.append(std::to_string(m_uLastTokenLine));
     strFullMsg.append("/Col=");
     strFullMsg.append(std::to_string(m_uLastTokenCol));
     strFullMsg.append(") - ");
-    strFullMsg.append(pszErr);
+    strFullMsg.append(svMsg);
  
     return strFullMsg;
 }

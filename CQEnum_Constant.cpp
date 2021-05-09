@@ -24,9 +24,9 @@ void ConstInfoList::ParseFrom(InputSrc& srcFile)
             break;
         }
 
+        ConstInfo cinfoNew;
         if ((strType == "Const") || (strType == "ConstExpr") || (strType == "ExtConst"))
         {
-            ConstInfo cinfoNew;
             if (strType == "Const")
             {
                 cinfoNew.m_eType = EConstTypes::Const;
@@ -60,27 +60,24 @@ void ConstInfoList::ParseFrom(InputSrc& srcFile)
                 srcFile.ThrowParseErr("A constant definition is a comma separated name, type and value");
             }
 
-            cinfoNew.m_strName = vTokens.at(0);
-            cinfoNew.m_strType = vTokens.at(1);
-            cinfoNew.m_strValue = vTokens.at(2);
-
             // Make sure the name is unique
-            std::vector<ConstInfo>::const_iterator it = std::find_if
-            (
-                m_vConstList.begin()
-                , m_vConstList.end()
-                , [&cinfoNew](const ConstInfo& cinfoCur) { return cinfoNew.m_strName == cinfoCur.m_strName; } 
-            );
+            if (m_sNameDupCheck.find(vTokens.at(0)) == m_sNameDupCheck.end()) 
+            {
+                cinfoNew.m_strName = std::move(vTokens.at(0));
+                cinfoNew.m_strType = std::move(vTokens.at(1));
+                cinfoNew.m_strValue = std::move(vTokens.at(2));
 
-            if (it != m_vConstList.end())
+                // Add this guy's name to the dup check list and then add to the const list
+                m_sNameDupCheck.insert(cinfoNew.m_strName);
+                m_vConstList.push_back(std::move(cinfoNew));
+            }
+            else
             {
                 std::string strErrMsg("Constant name '");
-                strErrMsg.append(cinfoNew.m_strName);
+                strErrMsg.append(vTokens.at(0));
                 strErrMsg.append("' is already used");
                 srcFile.ThrowParseErr(strErrMsg);
-
             }
-            m_vConstList.push_back(std::move(cinfoNew));
         }
         else
         {

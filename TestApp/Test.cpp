@@ -70,11 +70,11 @@ uint32_t uAltValToIndex(const  EnumTableVal* const paTable
 
 uint32_t uNameToIndex( const   EnumTableVal* const paTable
                        , const uint32_t            uCount
-                       , const wchar_t* const      pszFind)
+                       , const std::wstring_view&  svFind)
 {
     for (uint32_t uIndex = 0; uIndex < uCount; uIndex++)
     {
-        if (_wcsicmp(pszFind, paTable[uIndex].pszName) == 0)
+        if (_wcsicmp(svFind.data(), paTable[uIndex].pszName) == 0)
         {
             return uIndex;
         }
@@ -123,9 +123,9 @@ const std::wstring strTest = L"The value of the string object";
 
 
 // Enumeration method implementations
-bool bNameToEnum(const wchar_t* const pszName, CQSL::Test::TestEnum& eToFill)
+bool bNameToEnum(const std::wstring_view& svName, CQSL::Test::TestEnum& eToFill)
 {
-    const uint32_t uIndex = uNameToIndex(EnumTable_TestEnum.aevalTable, 3, pszName);
+    const uint32_t uIndex = uNameToIndex(EnumTable_TestEnum.aevalTable, 3, svName);
     if (uIndex >= 3)
     {
         return false;
@@ -164,9 +164,9 @@ const wchar_t* pszEnumToAltText2(const CQSL::Test::TestEnum eVal)
     return EnumTable_TestEnum.aevalTable[uIndex].pszText2;
 }
 
-bool bNameToEnum(const wchar_t* const pszName, CQSL::Test::TestBmp& eToFill)
+bool bNameToEnum(const std::wstring_view& svName, CQSL::Test::TestBmp& eToFill)
 {
-    const uint32_t uIndex = uNameToIndex(EnumTable_TestBmp.aevalTable, 3, pszName);
+    const uint32_t uIndex = uNameToIndex(EnumTable_TestBmp.aevalTable, 3, svName);
     if (uIndex >= 3)
     {
         return false;

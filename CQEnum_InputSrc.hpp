@@ -45,7 +45,7 @@ class InputSrc
         //
         bool bCheckNextId
         (
-            const   char* const         pszCheck
+            const   std::string_view&   svCheck
             , const char* const         pszFailMsg
             , const bool                bWithEquals
             , const bool                bThrowIfNot
@@ -135,14 +135,9 @@ class InputSrc
         //  The throw needs to be visible to the code analyzer, so we do it
         //  this way.
         //
-        void ThrowParseErr(const char* const pszMsg)
+        void ThrowParseErr(const std::string_view& svMsg)
         {
-            throw std::runtime_error(BuildErrMsg(pszMsg));
-        }
-
-        void ThrowParseErr(const std::string& strMsg)
-        {
-            ThrowParseErr(strMsg.c_str());
+            throw std::runtime_error(BuildErrMsg(svMsg));
         }
 
 
@@ -165,7 +160,7 @@ class InputSrc
 
         bool bIsSpace(const char chTest) const noexcept;
 
-        std::string BuildErrMsg(const char* const pszErr) const;
+        std::string BuildErrMsg(const std::string_view& svMsg) const;
 
         // Return the next character, optionally ignoring white space
         char chGetNext(const bool ignoreWS);

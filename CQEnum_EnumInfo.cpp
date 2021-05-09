@@ -212,7 +212,7 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
             else if (strCurToken == "Flags")
             {
                 srcFile.GetSpacedValues(vFlags);
-                for (std::string strFlag : vFlags)
+                for (const std::string& strFlag : vFlags)
                 {
                     if (strFlag == "AltVal")
                     {
@@ -287,7 +287,7 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
                 std::vector<std::string> vSynValues;
                 unsigned int uBits = 0;
                 srcFile.GetCommaSepValues(vSynValues);
-                for (std::string& strCur : vSynValues)
+                for (const std::string& strCur : vSynValues)
                 {
                     std::vector<EnumValInfo>::iterator itVal = itFindValue(strCur);
                     if (itVal == m_vValues.end())
@@ -330,10 +330,7 @@ void EnumInfo::ParseFrom(InputSrc& srcFile)
             //  Let a value object parse itself out. We tell it if we must see an explicit
             //  ordinal based on our type.
             //
-            evaliNew.ParseFrom
-            (
-                srcFile, bExplicitOrdinal(), m_bDoAltVal, m_bText1, m_bText2, m_strName
-            );
+            evaliNew.ParseFrom(srcFile, bExplicitOrdinal(), m_bDoAltVal, m_bText1, m_bText2, m_strName);
 
             // It can't be the same as any existing value or synonym
             if ((itFindValue(evaliNew.m_strName) != m_vValues.end())

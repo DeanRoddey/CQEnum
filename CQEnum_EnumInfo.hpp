@@ -82,7 +82,7 @@ class EnumInfo
         // Unimplemented
         EnumInfo(const EnumInfo&) = delete;
         EnumInfo& operator=(const EnumInfo&) = delete;
-        EnumInfo& operator=(EnumInfo&&) = delete;
+        EnumInfo& operator=(EnumInfo&&) = default;
 
         // Non-contiguous ones must provide an explicit ordinal value
         bool bExplicitOrdinal() const noexcept
@@ -121,6 +121,10 @@ class EnumInfo
         //  not start at zero which the standard contiguous type requires.)
         //  We can generate inc/dec commands for non-standard ones as long as
         //  they have monotonic ordinals.
+        // 
+        //  The order of enum values must be maintained of course, since that
+        //  controls the ordinal assignment, so we can't use a map or set or
+        //  anything. Well, we could keep a separate one, but not worth it.
         //
         bool                        m_bIsMonotonic = false;
         bool                        m_bText1 = false;

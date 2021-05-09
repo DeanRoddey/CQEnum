@@ -14,8 +14,12 @@ class ConstInfo
 {
     public :
         ConstInfo() noexcept : m_eType(EConstTypes::Count) {}
+        ConstInfo(const ConstInfo&) = default;
         ConstInfo(ConstInfo&&) = default;
         ~ConstInfo() = default;
+
+        ConstInfo& operator=(const ConstInfo&) = delete;
+        ConstInfo& operator=(ConstInfo&&) = default;
 
         //
         //  We have to track the constant type (const, constexpr, etc...), the
@@ -46,6 +50,9 @@ class ConstInfoList
 
         // We keep a list of const info objects
         std::vector<ConstInfo>  m_vConstList;
+
+        // And for efficient 'name used' checks, we keep a set of constant names
+        std::set<std::string>   m_sNameDupCheck;
 };
 
 
